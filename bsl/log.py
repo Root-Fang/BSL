@@ -40,8 +40,8 @@ def getLogger(logname="indoor"):
         for arg in inspect.getargspec(cls.__dict__["__init__"]).args:
             if arg in LOGGING['handlers'][handler]:
                 args[arg] = LOGGING['handlers'][handler][arg]
-        # if handler == "files":
-        #     args['filename'] = os.path.join(BASE_DIR+"/log/ipp/"+"_".join(logname.split("."))+".log")
+        if handler == "files":
+            args['filename'] = os.path.join(args['filename'].rsplit("/", 1)[0], "_".join(logname.split("."))+".log")
         instance = cls(**args)
         instance.setFormatter(logging.Formatter(LOGGING['formatters'][fm]['format']))
         instance.setLevel(level)

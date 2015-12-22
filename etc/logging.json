@@ -1,0 +1,39 @@
+{
+    "formatters": {
+        "standard": {
+            "format":"%(asctime)s [%(threadName)s:%(thread)d] [%(filename)s:%(lineno)d] [%(module)s:%(funcName)s] [%(levelname)s]- %(message)s"
+        }
+    },
+    "handlers": {
+        "console":{
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "standard"
+        },
+        "files": {
+            "level": "INFO",
+            "class":"logging.handlers.TimedRotatingFileHandler",
+            "filename": "../log/ipp/default.log",
+            "when":"D",
+            "interval": 1,
+            "formatter":"standard"
+        }
+    },
+    "loggers": {
+        "indoor": {
+            "handlers": ["files"],
+            "level": "INFO",
+            "propagate": false
+            },
+        "indoor.sdk.server": {
+            "handlers": ["files", "console"],
+            "level": "INFO",
+            "propagate": false
+            },
+        "handle_server_loc_and_push": {
+            "handlers": ["files", "console"],
+            "level": "INFO",
+            "propagate": false
+            }
+    }
+}
