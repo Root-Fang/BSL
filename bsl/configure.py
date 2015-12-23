@@ -212,8 +212,11 @@ class ConfigOpts(object):
             self._reload_group(group)
         try:
             return self.__cache[group][key]
-        except ConfigParser.NoOptionError as e:
-            self.__cache[group][key] = default
+        except KeyError as e:
+            if self.fp.has_option(group, key):
+                self.__cache[group][key] = self.fp.get(group, key)
+            else:
+                self.__cache[group][key] = default
         return self.__cache[group][key]
 
 
@@ -226,14 +229,17 @@ if __name__ == "__main__":
             IntOpt('abc', 'default'),
             FloatOpt('zip', 'default'),
             ListOpt('s', 'skp'),
-            DictOpt('d', 'skp')]
+            DictOpt('d', 'skp'),
+            ListOpt('unknown', 'skp', default=['a','b','c'])]
     CONF.register_opts(opts)
     print type(CONF['default']['bool']), CONF['default']['bool']
     print type(CONF['default']['abc']), CONF['default']['abc']
     print type(CONF['default']['zip']), CONF['default']['zip']
     print type(CONF['skp']['s']), CONF['skp']['s']
     print type(CONF['skp']['d']), CONF['skp']['d']
-    print CONF.register_opt
+    print type(CONF['skp']['unknown']), CONF['skp']['unknown']
+    CONF.unregister_opt('unknown', 'skp')
+    print CONF.get('unknown', 'skp')
 
 
 
