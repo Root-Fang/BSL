@@ -135,6 +135,8 @@ class ConfigOpts(object):
     """
     def __init__(self):
         self.__cache = dict()
+        self.fp = None
+        self.path = None
     def setup(self, path):
         self.path = path
         self.fp = None
@@ -150,6 +152,8 @@ class ConfigOpts(object):
         for op in ops:
             self.__cache[group][op] = self.fp.get(group, op)
     def __getitem__(self, group='default'):
+        if not self.fp:
+            raise Exception("Please invoke method setup first!")
         if self.fp.has_section(group):
             if group not in self.__cache:
                 self._reload_group(group)
@@ -208,6 +212,8 @@ class ConfigOpts(object):
         :param default: default value corresponding to the key given by client
         :return: the corresponding value of the key.
         """
+        if not self.fp:
+            raise Exception("Please invoke method setup first!")
         if group not in self.__cache:
             self._reload_group(group)
         try:
@@ -223,6 +229,7 @@ class ConfigOpts(object):
 CONF = ConfigOpts()
 
 if __name__ == "__main__":
+    CONF['abc']
     path = "../etc/bsl.conf"
     CONF.setup(path)
     opts = [BoolOpt('bool', 'default'),
